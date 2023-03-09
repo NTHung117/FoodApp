@@ -1,4 +1,4 @@
-package com.example.foodapp;
+package com.example.foodapp.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
@@ -15,6 +15,9 @@ import androidx.appcompat.widget.Toolbar;
 import android.widget.ViewFlipper;
 
 import com.bumptech.glide.Glide;
+import com.example.foodapp.R;
+import com.example.foodapp.adapter.LoaiSpAdapter;
+import com.example.foodapp.model.LoaiSp;
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
@@ -27,7 +30,8 @@ public class MainActivity extends AppCompatActivity {
     NavigationView navigationView;
     ListView listViewManHinhChinh;
     DrawerLayout drawerLayout;
-
+    LoaiSpAdapter loaiSpAdapter;
+    List<LoaiSp> mangloaisp;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,5 +80,10 @@ public class MainActivity extends AppCompatActivity {
         navigationView = findViewById(R.id.navigationView);
         listViewManHinhChinh = findViewById(R.id.listViewManHinhChinh);
         drawerLayout = findViewById(R.id.drawerLayout);
+        //Khoi tao List
+        mangloaisp = new ArrayList<>();
+        //Khoi tao adapter
+        loaiSpAdapter = new LoaiSpAdapter(getApplicationContext(),mangloaisp);
+        listViewManHinhChinh.setAdapter(loaiSpAdapter);
     }
 }
