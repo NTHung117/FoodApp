@@ -57,11 +57,11 @@ public class MainActivity extends AppCompatActivity {
         ActionBar();
 
         if (isConnected(this)){
-            Toast.makeText(getApplicationContext(), "Có kết nối internet", Toast.LENGTH_LONG).show();
+
             ActionViewFlipper();
             getLoaiSanPham();
         }else {
-            Toast.makeText(getApplicationContext(), "Không có kết nối internet", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "Không có kết nối internet, hãy thử lại", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -72,7 +72,10 @@ public class MainActivity extends AppCompatActivity {
                 .subscribe(
                         loaiSpModel -> {
                             if (loaiSpModel.isSuccess()){
-                                Toast.makeText(getApplicationContext(), loaiSpModel.getResult().get(0).getTensanpham(), Toast.LENGTH_LONG).show();
+                                mangloaisp = loaiSpModel.getResult();
+                                //Khoi tao adapter
+                                loaiSpAdapter = new LoaiSpAdapter(getApplicationContext(),mangloaisp);
+                                listViewManHinhChinh.setAdapter(loaiSpAdapter);
                             }
                         }
                 ));
@@ -119,9 +122,8 @@ public class MainActivity extends AppCompatActivity {
         drawerLayout = findViewById(R.id.drawerLayout);
         //Khoi tao List
         mangloaisp = new ArrayList<>();
-        //Khoi tao adapter
-        loaiSpAdapter = new LoaiSpAdapter(getApplicationContext(),mangloaisp);
-        listViewManHinhChinh.setAdapter(loaiSpAdapter);
+
+
     }
     private boolean isConnected(Context context) {
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -133,5 +135,11 @@ public class MainActivity extends AppCompatActivity {
             return false;
         }
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        compositeDisposable.clear();
+        super.onDestroy();
     }
 }
