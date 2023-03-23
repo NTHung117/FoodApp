@@ -14,6 +14,7 @@ import com.bumptech.glide.Glide;
 import com.example.foodapp.R;
 import com.example.foodapp.model.SanPhamMoi;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 public class SanPhamMoiAdapter extends RecyclerView.Adapter<SanPhamMoiAdapter.MyViewHolder> {
@@ -37,7 +38,8 @@ public class SanPhamMoiAdapter extends RecyclerView.Adapter<SanPhamMoiAdapter.My
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         SanPhamMoi sanPhamMoi = array.get(position);
         holder.textTen.setText(sanPhamMoi.getTensanpham());
-        holder.textGia.setText(sanPhamMoi.getGiasanpham());
+        DecimalFormat decimalFormat = new DecimalFormat("###,###,###"); //Xử dụng thư viện decimalformat để xử lý dữ liệu số. Chúng ta định cứ 3 số sẽ phẩy một lần
+        holder.textGia.setText("Giá: "+decimalFormat.format(Double.parseDouble(sanPhamMoi.getGiasanpham()))+ "đ"); //Xử dụng parsedouble để chuyển đổi string thành double
         Glide.with(context).load(sanPhamMoi.getHinhanh()).into(holder.imageHinhAnh);
     }
 

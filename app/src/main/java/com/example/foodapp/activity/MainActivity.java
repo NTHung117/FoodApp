@@ -3,6 +3,7 @@ package com.example.foodapp.activity;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
@@ -22,7 +23,10 @@ import android.widget.ViewFlipper;
 import com.bumptech.glide.Glide;
 import com.example.foodapp.R;
 import com.example.foodapp.adapter.LoaiSpAdapter;
+import com.example.foodapp.adapter.SanPhamMoiAdapter;
 import com.example.foodapp.model.LoaiSp;
+import com.example.foodapp.model.SanPhamMoi;
+import com.example.foodapp.model.SanPhamMoiModel;
 import com.example.foodapp.retrofit.ApiBanHang;
 import com.example.foodapp.retrofit.RetrofitClient;
 import com.example.foodapp.utils.Utils;
@@ -46,6 +50,8 @@ public class MainActivity extends AppCompatActivity {
     List<LoaiSp> mangloaisp;
     CompositeDisposable compositeDisposable = new CompositeDisposable();
     ApiBanHang apiBanHang;
+    List<SanPhamMoi> mangSpMoi;
+    SanPhamMoiAdapter spAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,9 +66,28 @@ public class MainActivity extends AppCompatActivity {
 
             ActionViewFlipper();
             getLoaiSanPham();
+            getSpMoi();
         }else {
             Toast.makeText(getApplicationContext(), "Không có kết nối internet, hãy thử lại", Toast.LENGTH_LONG).show();
         }
+    }
+
+    private void getSpMoi() {
+        compositeDisposable.add(apiBanHang.getSpMoi()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        sanPhamMoiModel -> {
+                            if (sanPhamMoiModel.isSuccess()){
+                                mangSpMoi = sanPhamMoiModel.getResult();
+                                spAdapter = new SanPhamMoiAdapter(getApplicationContext(), mangSpMoi);
+                                recyclerView.setAdapter(spAdapter);
+                            }
+                        },
+                        throwable -> {
+                            Toast.makeText(getApplicationContext(), "Kết nối thất bại với Server"+throwable.getMessage(), Toast.LENGTH_LONG).show();
+                        }
+                ));
     }
 
     private void getLoaiSanPham() {
@@ -117,11 +142,15 @@ public class MainActivity extends AppCompatActivity {
         toolbar = findViewById(R.id.toolbarHome);
         viewFlipper = findViewById(R.id.viewFlipper);
         recyclerView = findViewById(R.id.recyclerView);
+        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(this,2);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setHasFixedSize(true);
         navigationView = findViewById(R.id.navigationView);
         listViewManHinhChinh = findViewById(R.id.listViewManHinhChinh);
         drawerLayout = findViewById(R.id.drawerLayout);
         //Khoi tao List
         mangloaisp = new ArrayList<>();
+        mangSpMoi = new ArrayList<>();
 
 
     }
