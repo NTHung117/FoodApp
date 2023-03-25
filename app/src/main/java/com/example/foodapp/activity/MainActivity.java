@@ -86,6 +86,7 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case 1:
                         Intent dienthoai = new Intent(getApplicationContext(), DienThoaiActivity.class);
+                        dienthoai.putExtra("loai",1);
                         startActivity(dienthoai);
                         break;
                     case 2:
