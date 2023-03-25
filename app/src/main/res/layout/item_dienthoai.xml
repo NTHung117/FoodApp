@@ -34,6 +34,14 @@
                 android:layout_height="wrap_content">
             </TextView>
             <TextView
+                android:id="@+id/itemdt_idsp"
+                android:gravity="center"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            </TextView>
+            <TextView
                 android:id="@+id/itemdt_gia"
                 android:textSize="18sp"
                 android:textStyle="bold"
