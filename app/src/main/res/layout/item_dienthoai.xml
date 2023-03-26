@@ -5,7 +5,7 @@
     app:cardCornerRadius="4dp"
     android:layout_margin="5dp"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="150dp">
     <LinearLayout
         android:layout_margin="5dp"
         android:weightSum="10"
@@ -33,16 +33,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
             </TextView>
-            <TextView
-                android:id="@+id/itemdt_idsp"
-                android:gravity="center"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-            </TextView>
+
             <TextView
                 android:id="@+id/itemdt_gia"
+                android:layout_marginLeft="20dp"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:text="Giá: 250000đ"
@@ -52,6 +46,7 @@
             </TextView>
             <TextView
                 android:id="@+id/itemdt_mota"
+                android:layout_marginLeft="20dp"
                 android:textSize="15sp"
                 android:textStyle="bold"
                 android:text="Mô tả"

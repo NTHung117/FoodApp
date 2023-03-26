@@ -49,8 +49,7 @@ public class DienThoaiAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         if (holder instanceof MyViewHolder){
             MyViewHolder myViewHolder = (MyViewHolder) holder;
             SanPhamMoi sanPham = array.get(position);
-            myViewHolder.tensp.setText(sanPham.getTensanpham());
-            myViewHolder.idsp.setText(sanPham.getId() + "");
+            myViewHolder.tensp.setText(sanPham.getTensanpham().trim());
             DecimalFormat decimalFormat = new DecimalFormat("###,###,###");
             myViewHolder.giasp.setText("Giá: "+decimalFormat.format(Double.parseDouble(sanPham.getGiasanpham()))+ "đ");
             myViewHolder.mota.setText(sanPham.getMota());
@@ -61,6 +60,7 @@ public class DienThoaiAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     if (!isLongClick){
                         //Click
                         Intent intent = new Intent(context, ChiTietActivity.class);
+                        intent.putExtra("chitiet", sanPham);
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         context.startActivity(intent);
                     }
@@ -100,7 +100,6 @@ public class DienThoaiAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             tensp = itemView.findViewById(R.id.itemdt_ten);
-            idsp = itemView.findViewById(R.id.itemdt_idsp);
             giasp = itemView.findViewById(R.id.itemdt_gia);
             mota = itemView.findViewById(R.id.itemdt_mota);
             hinhanh = itemView.findViewById(R.id.itemdt_image);

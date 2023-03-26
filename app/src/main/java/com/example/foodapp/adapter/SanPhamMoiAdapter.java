@@ -1,6 +1,7 @@
 package com.example.foodapp.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +12,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.foodapp.Interface.ItemClickListener;
 import com.example.foodapp.R;
+import com.example.foodapp.activity.ChiTietActivity;
 import com.example.foodapp.model.SanPhamMoi;
 
 import java.text.DecimalFormat;
@@ -41,6 +44,18 @@ public class SanPhamMoiAdapter extends RecyclerView.Adapter<SanPhamMoiAdapter.My
         DecimalFormat decimalFormat = new DecimalFormat("###,###,###"); //Xử dụng thư viện decimalformat để xử lý dữ liệu số. Chúng ta định cứ 3 số sẽ phẩy một lần
         holder.textGia.setText("Giá: "+decimalFormat.format(Double.parseDouble(sanPhamMoi.getGiasanpham()))+ "đ"); //Xử dụng parsedouble để chuyển đổi string thành double
         Glide.with(context).load(sanPhamMoi.getHinhanh()).into(holder.imageHinhAnh);
+        holder.setItemClickListener(new ItemClickListener() {
+            @Override
+            public void onClick(View view, int pos, boolean isLongClick) {
+                if (!isLongClick){
+                    //Click
+                    Intent intent = new Intent(context, ChiTietActivity.class);
+                    intent.putExtra("chitiet", sanPhamMoi);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    context.startActivity(intent);
+                }
+            }
+        });
     }
 
     @Override
@@ -49,15 +64,26 @@ public class SanPhamMoiAdapter extends RecyclerView.Adapter<SanPhamMoiAdapter.My
     }
 
 
-    public class MyViewHolder extends RecyclerView.ViewHolder {
+    public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView textTen, textGia;
         ImageView imageHinhAnh;
+        private ItemClickListener itemClickListener;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             textTen = itemView.findViewById(R.id.itemspmoi_ten);
             textGia = itemView.findViewById(R.id.itemspmoi_gia);
             imageHinhAnh = itemView.findViewById(R.id.itemspmoi_image);
+            itemView.setOnClickListener(this);
+        }
+
+        public void setItemClickListener(ItemClickListener itemClickListener) {
+            this.itemClickListener = itemClickListener;
+        }
+
+        @Override
+        public void onClick(View view) {
+            itemClickListener.onClick(view, getAdapterPosition(), false);
         }
     }
 }
