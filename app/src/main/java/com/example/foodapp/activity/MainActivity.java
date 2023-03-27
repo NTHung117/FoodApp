@@ -178,7 +178,9 @@ public class MainActivity extends AppCompatActivity {
         //Khoi tao List
         mangloaisp = new ArrayList<>();
         mangSpMoi = new ArrayList<>();
-
+        if (Utils.manggiohang == null){
+            Utils.manggiohang = new ArrayList<>();
+        }
 
     }
     private boolean isConnected(Context context) {

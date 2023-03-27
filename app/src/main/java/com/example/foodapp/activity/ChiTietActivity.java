@@ -13,7 +13,10 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.foodapp.R;
+import com.example.foodapp.model.GioHang;
 import com.example.foodapp.model.SanPhamMoi;
+import com.example.foodapp.utils.Utils;
+import com.nex3z.notificationbadge.NotificationBadge;
 
 import java.text.DecimalFormat;
 
@@ -23,6 +26,8 @@ public class ChiTietActivity extends AppCompatActivity {
     ImageView imageHinhAnh;
     Spinner spinner;
     Toolbar toolbar;
+    SanPhamMoi sanPhamMoi;
+    NotificationBadge badge;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,10 +35,62 @@ public class ChiTietActivity extends AppCompatActivity {
         initView();
         ActionToolBar();
         initData();
+        initControl();
+    }
+
+    private void initControl() {
+        btnThemVaoGioHang.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                themGioHang();
+            }
+        });
+    }
+
+    private void themGioHang() {
+        if (Utils.manggiohang.size() > 0){
+            boolean flag = false;
+            int soLuong = Integer.parseInt(spinner.getSelectedItem().toString());
+            //Kiểm tra xem có bị trùng sản phẩm không, t duyệt qua từng phần tử của mảng
+            for (int i = 0 ; i < Utils.manggiohang.size(); i++){
+                if (Utils.manggiohang.get(i).getIdSp() == sanPhamMoi.getId()){
+                    Utils.manggiohang.get(i).setSoLuong(soLuong + Utils.manggiohang.get(i).getSoLuong());
+                    long gia = Long.parseLong(sanPhamMoi.getGiasanpham()) * Utils.manggiohang.get(i).getSoLuong();
+                    Utils.manggiohang.get(i).setGiaSp(gia);
+                    flag = true;//Nếu sản phẩm đã trùng thì cho nó bằng true
+                }
+            }
+            if (flag == false){//Nếu nó không trùng thì chúng ta không lấy số lương của nó nữa
+                long gia = Long.parseLong(sanPhamMoi.getGiasanpham()) * soLuong;
+                GioHang gioHang = new GioHang();
+                gioHang.setIdSp(sanPhamMoi.getId());
+                gioHang.setTenSp(sanPhamMoi.getTensanpham());
+                gioHang.setHinhSp(sanPhamMoi.getHinhanh());
+                gioHang.setGiaSp(gia);
+                gioHang.setSoLuong(soLuong);
+                Utils.manggiohang.add(gioHang);
+            }
+        }else {
+            int soLuong = Integer.parseInt(spinner.getSelectedItem().toString());
+            long gia = Long.parseLong(sanPhamMoi.getGiasanpham()) * soLuong;
+            GioHang gioHang = new GioHang();
+            gioHang.setIdSp(sanPhamMoi.getId());
+            gioHang.setTenSp(sanPhamMoi.getTensanpham());
+            gioHang.setHinhSp(sanPhamMoi.getHinhanh());
+            gioHang.setGiaSp(gia);
+            gioHang.setSoLuong(soLuong);
+            Utils.manggiohang.add(gioHang);
+        }
+        int totalItem = 0;
+        for (int i = 0; i < Utils.manggiohang.size(); i++){
+            totalItem = totalItem + Utils.manggiohang.get(i).getSoLuong();
+        }
+        badge.setText(String.valueOf(totalItem));
+
     }
 
     private void initData() {
-        SanPhamMoi sanPhamMoi = (SanPhamMoi) getIntent().getSerializableExtra("chitiet");
+        sanPhamMoi = (SanPhamMoi) getIntent().getSerializableExtra("chitiet");
         tensp.setText(sanPhamMoi.getTensanpham());
         mota.setText(sanPhamMoi.getMota());
         Glide.with(getApplicationContext()).load(sanPhamMoi.getHinhanh()).into(imageHinhAnh);
@@ -54,6 +111,14 @@ public class ChiTietActivity extends AppCompatActivity {
         spinner = findViewById(R.id.spinner);
         imageHinhAnh = findViewById(R.id.imgChiTiet);
         toolbar = findViewById(R.id.toolbar);
+        badge = findViewById(R.id.cart_sl);
+        if (Utils.manggiohang != null){
+            int totalItem = 0;
+            for (int i = 0; i < Utils.manggiohang.size(); i++){
+                totalItem = totalItem + Utils.manggiohang.get(i).getSoLuong();
+            }
+            badge.setText(String.valueOf(totalItem));
+        }
     }
     private void ActionToolBar() {
         setSupportActionBar(toolbar);
