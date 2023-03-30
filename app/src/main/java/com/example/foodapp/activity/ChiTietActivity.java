@@ -3,10 +3,12 @@ package com.example.foodapp.activity;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -28,6 +30,7 @@ public class ChiTietActivity extends AppCompatActivity {
     Toolbar toolbar;
     SanPhamMoi sanPhamMoi;
     NotificationBadge badge;
+    FrameLayout frameLayoutGioHang;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,7 +63,7 @@ public class ChiTietActivity extends AppCompatActivity {
                     flag = true;//Nếu sản phẩm đã trùng thì cho nó bằng true
                 }
             }
-            if (flag == false){//Nếu nó không trùng thì chúng ta không lấy số lương của nó nữa
+            if (flag == false){//Nếu nó không trùng thì chúng ta lấy nó như bình thường
                 long gia = Long.parseLong(sanPhamMoi.getGiasanpham()) * soLuong;
                 GioHang gioHang = new GioHang();
                 gioHang.setIdSp(sanPhamMoi.getId());
@@ -112,6 +115,14 @@ public class ChiTietActivity extends AppCompatActivity {
         imageHinhAnh = findViewById(R.id.imgChiTiet);
         toolbar = findViewById(R.id.toolbar);
         badge = findViewById(R.id.cart_sl);
+        frameLayoutGioHang = findViewById(R.id.frameGioHang);
+        frameLayoutGioHang.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent giohang = new Intent(getApplicationContext(), GioHangActivity.class);
+                startActivity(giohang);
+            }
+        });
         if (Utils.manggiohang != null){
             int totalItem = 0;
             for (int i = 0; i < Utils.manggiohang.size(); i++){
