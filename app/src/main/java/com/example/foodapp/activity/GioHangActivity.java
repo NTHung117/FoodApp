@@ -12,9 +12,15 @@ import android.widget.TextView;
 
 import com.example.foodapp.R;
 import com.example.foodapp.adapter.GioHangAdapter;
+import com.example.foodapp.model.EventBus.TinhTongEvent;
 import com.example.foodapp.model.GioHang;
 import com.example.foodapp.utils.Utils;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
+import java.text.DecimalFormat;
 import java.util.List;
 
 public class GioHangActivity extends AppCompatActivity {
@@ -29,6 +35,17 @@ public class GioHangActivity extends AppCompatActivity {
         setContentView(R.layout.activity_gio_hang);
         initView();
         initControl();
+        tinhHoaDon();
+    }
+
+    private void tinhHoaDon() {
+        long tongtienSp = 0 ;
+        for (int i = 0; i < Utils.manggiohang.size(); i++){
+            tongtienSp = tongtienSp + (Utils.manggiohang.get(i).getGiaSp() * Utils.manggiohang.get(i).getSoLuong());
+
+        }
+        DecimalFormat decimalFormat = new DecimalFormat("###,###,###");
+        tongTien.setText(decimalFormat.format(tongtienSp));
     }
 
     private void initControl() {
@@ -57,5 +74,24 @@ public class GioHangActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recycleview_gioHang);
         tongTien = findViewById(R.id.txtTongTien);
         btnThanhToan = findViewById(R.id.btnThanhToan);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
+    }
+    //Sau khi đăng ký xong sự kiện EventBus trong hàm onStart thì t sẽ bắt sự kiện do bên kia gửi qua
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    public void eventTinhTien(TinhTongEvent event){
+        if (event != null){//Bên kia sẽ gửi qua một sự kiện, sau đó chúng ta kiểm tra nó khác null thì chúng ta sẽ tính lại
+            tinhHoaDon();
+        }
     }
 }

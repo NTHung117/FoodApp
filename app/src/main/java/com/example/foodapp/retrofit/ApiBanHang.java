@@ -22,4 +22,12 @@ public interface ApiBanHang {
             @Field("page") int page,
             @Field("loai") int loai
     );
+    @POST("dangky.php")
+    @FormUrlEncoded
+    Observable<SanPhamMoiModel> dangKy(
+            @Field("email") String email,
+            @Field("pass") String pass,
+            @Field("user") String user,
+            @Field("phoneNumber") String phoneNumber
+    );
 }

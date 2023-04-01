@@ -16,26 +16,33 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".activity.DangNhapActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activity.DangKyActivity"
+            android:exported="true" />
+        <activity
             android:name=".activity.GioHangActivity"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".activity.ChiTietActivity"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".activity.DienThoaiActivity"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".activity.LaptopActivity"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".activity.MainActivity"
             android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
     </application>
 
 </manifest>
