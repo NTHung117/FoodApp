@@ -2,6 +2,7 @@ package com.example.foodapp.retrofit;
 
 import com.example.foodapp.model.LoaiSpModel;
 import com.example.foodapp.model.SanPhamMoiModel;
+import com.example.foodapp.model.UserModel;
 
 import io.reactivex.rxjava3.core.Observable;
 import retrofit2.http.Field;
@@ -24,10 +25,10 @@ public interface ApiBanHang {
     );
     @POST("dangky.php")
     @FormUrlEncoded
-    Observable<SanPhamMoiModel> dangKy(
+    Observable<UserModel> dangKy(
             @Field("email") String email,
             @Field("pass") String pass,
-            @Field("user") String user,
+            @Field("username") String username,
             @Field("phoneNumber") String phoneNumber
     );
 }
