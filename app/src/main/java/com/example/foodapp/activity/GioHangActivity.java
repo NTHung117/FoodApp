@@ -5,6 +5,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -29,6 +30,7 @@ public class GioHangActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     Button btnThanhToan;
     GioHangAdapter gioHangAdapter;
+    long tongtienSp;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,7 +41,7 @@ public class GioHangActivity extends AppCompatActivity {
     }
 
     private void tinhHoaDon() {
-        long tongtienSp = 0 ;
+        tongtienSp = 0 ;
         for (int i = 0; i < Utils.manggiohang.size(); i++){
             tongtienSp = tongtienSp + (Utils.manggiohang.get(i).getGiaSp() * Utils.manggiohang.get(i).getSoLuong());
 
@@ -66,6 +68,14 @@ public class GioHangActivity extends AppCompatActivity {
             gioHangAdapter = new GioHangAdapter(getApplicationContext(), Utils.manggiohang);
             recyclerView.setAdapter(gioHangAdapter);
         }
+        btnThanhToan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), ThanhToanActivity.class);
+                intent.putExtra("tongTien", tongtienSp);
+                startActivity(intent);
+            }
+        });
     }
 
     private void initView() {

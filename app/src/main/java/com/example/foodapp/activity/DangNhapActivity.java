@@ -22,7 +22,7 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class DangNhapActivity extends AppCompatActivity {
-    TextView txtDangKyTaiDay;
+    TextView txtDangKyTaiDay, txtResetPass;
     EditText email, pass;
     AppCompatButton btnDangNhap;
     ApiBanHang apiBanHang;
@@ -76,6 +76,13 @@ public class DangNhapActivity extends AppCompatActivity {
                 }
             }
         });
+        txtResetPass.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), ResetPassActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     private void initView() {
@@ -84,6 +91,7 @@ public class DangNhapActivity extends AppCompatActivity {
         email = findViewById(R.id.emailLog);
         pass = findViewById(R.id.passLog);
         btnDangNhap = findViewById(R.id.btnDangNhap);
+        txtResetPass = findViewById(R.id.txtResetPass);
         Paper.init(this);
         //Đọc dữ liệu
         if (Paper.book().read("email") != null && Paper.book().read("pass") != null){
