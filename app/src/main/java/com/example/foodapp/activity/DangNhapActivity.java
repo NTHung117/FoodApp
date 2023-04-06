@@ -27,7 +27,6 @@ public class DangNhapActivity extends AppCompatActivity {
     AppCompatButton btnDangNhap;
     ApiBanHang apiBanHang;
     CompositeDisposable compositeDisposable = new CompositeDisposable();
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
