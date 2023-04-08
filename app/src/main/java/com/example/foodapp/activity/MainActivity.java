@@ -98,6 +98,10 @@ public class MainActivity extends AppCompatActivity {
                         laptop.putExtra("loai",2);
                         startActivity(laptop);
                         break;
+                    case 5:
+                        Intent xemdonhang = new Intent(getApplicationContext(), XemDonActivity.class);
+                        startActivity(xemdonhang);
+                        break;
                 }
             }
         });

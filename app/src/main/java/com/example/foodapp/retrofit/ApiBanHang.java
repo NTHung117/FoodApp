@@ -1,5 +1,6 @@
 package com.example.foodapp.retrofit;
 
+import com.example.foodapp.model.DonHangModel;
 import com.example.foodapp.model.LoaiSpModel;
 import com.example.foodapp.model.SanPhamMoiModel;
 import com.example.foodapp.model.UserModel;
@@ -44,9 +45,14 @@ public interface ApiBanHang {
             @Field("email") String email,
             @Field("sdt") String sdt,
             @Field("tongtien") String tongtien,
-            @Field("iduser") int iduser,
+            @Field("iduser") int id,
             @Field("diachi") String diachi,
             @Field("soluong") int soluong,
             @Field("chitiet") String chitiet
+    );
+    @POST("xemdonhang.php")
+    @FormUrlEncoded
+    Observable<DonHangModel> xemDonHang(
+            @Field("iduser") int id
     );
 }

@@ -40,8 +40,8 @@ public class ThanhToanActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_thanh_toan);
         initView();
-        initControl();
         countItem();
+        initControl();
     }
 
     private void countItem() {
@@ -89,13 +89,12 @@ public class ThanhToanActivity extends AppCompatActivity {
                     //Post dữ liệu lên sever
                     //Để post toàn bộ giỏ hàng lên database t sẽ chuyển cái giỏ hàng thành một cái chuỗi json và sử dụng thư viện json để chuyển nó
                     Log.d("test", new Gson().toJson(Utils.manggiohang));
-                    compositeDisposable.add(apiBanHang.createOrder(str_email, str_sdt, String.valueOf(tongTien),id,str_diachi, totalItem, new Gson().toJson(Utils.manggiohang))
+                    compositeDisposable.add(apiBanHang.createOrder(str_email,str_sdt,String.valueOf(tongTien), id, str_diachi, totalItem,new Gson().toJson(Utils.manggiohang))
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(
                                     userModel -> {
-                                        Toast.makeText(getApplicationContext(), "Thanh toan thanh cong", Toast.LENGTH_SHORT).show();
-                                        //Sau khi thanh toán thành công t sẽ chuyển về màn hình chính
+                                        Toast.makeText(getApplicationContext(), "Thanh toán thành công", Toast.LENGTH_SHORT).show();
                                         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                                         startActivity(intent);
                                         finish();
@@ -104,6 +103,7 @@ public class ThanhToanActivity extends AppCompatActivity {
                                         Toast.makeText(getApplicationContext(), throwable.getMessage(), Toast.LENGTH_SHORT).show();
                                     }
                             ));
+
                 }
             }
         });

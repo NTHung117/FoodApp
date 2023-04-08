@@ -58,13 +58,13 @@ public class ChiTietActivity extends AppCompatActivity {
             for (int i = 0 ; i < Utils.manggiohang.size(); i++){
                 if (Utils.manggiohang.get(i).getIdSp() == sanPhamMoi.getId()){
                     Utils.manggiohang.get(i).setSoLuong(soLuong + Utils.manggiohang.get(i).getSoLuong());
-                    long gia = Long.parseLong(sanPhamMoi.getGiasanpham()) * Utils.manggiohang.get(i).getSoLuong();
+                    long gia = Long.parseLong(sanPhamMoi.getGiasanpham());
                     Utils.manggiohang.get(i).setGiaSp(gia);
                     flag = true;//Nếu sản phẩm đã trùng thì cho nó bằng true
                 }
             }
             if (flag == false){//Nếu nó không trùng thì chúng ta lấy nó như bình thường
-                long gia = Long.parseLong(sanPhamMoi.getGiasanpham()) * soLuong;
+                long gia = Long.parseLong(sanPhamMoi.getGiasanpham());
                 GioHang gioHang = new GioHang();
                 gioHang.setIdSp(sanPhamMoi.getId());
                 gioHang.setTenSp(sanPhamMoi.getTensanpham());
@@ -75,7 +75,7 @@ public class ChiTietActivity extends AppCompatActivity {
             }
         }else {
             int soLuong = Integer.parseInt(spinner.getSelectedItem().toString());
-            long gia = Long.parseLong(sanPhamMoi.getGiasanpham()) * soLuong;
+            long gia = Long.parseLong(sanPhamMoi.getGiasanpham());
             GioHang gioHang = new GioHang();
             gioHang.setIdSp(sanPhamMoi.getId());
             gioHang.setTenSp(sanPhamMoi.getTensanpham());
