@@ -58,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
     SanPhamMoiAdapter spAdapter;
     NotificationBadge badge;
     FrameLayout frameLayout;
+    ImageView imgSearch;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -185,6 +186,7 @@ public class MainActivity extends AppCompatActivity {
         drawerLayout = findViewById(R.id.drawerLayout);
         badge = findViewById(R.id.cart_sl);
         frameLayout = findViewById(R.id.frameGioHang);
+        imgSearch = findViewById(R.id.imgSearch);
         //Khoi tao List
         mangloaisp = new ArrayList<>();
         mangSpMoi = new ArrayList<>();
@@ -197,11 +199,20 @@ public class MainActivity extends AppCompatActivity {
             }
             badge.setText(String.valueOf(totalItem));
         }
+        //Giỏ Hàng
         frameLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent gioHang = new Intent(getApplicationContext(), GioHangActivity.class);
                 startActivity(gioHang);
+            }
+        });
+        //Search
+        imgSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent search = new Intent(getApplicationContext(), SearchActivity.class);
+                startActivity(search);
             }
         });
     }

@@ -55,4 +55,9 @@ public interface ApiBanHang {
     Observable<DonHangModel> xemDonHang(
             @Field("iduser") int id
     );
+    @POST("timkiem.php")
+    @FormUrlEncoded
+    Observable<SanPhamMoiModel> search(
+            @Field("search") String search
+    );
 }
