@@ -54,4 +54,6 @@ dependencies {
     implementation 'io.github.pilgr:paperdb:2.7.2'
     //Json
     implementation 'com.google.code.gson:gson:2.10.1'
+    //
+    implementation 'com.airbnb.android:lottie:6.0.0'//Thư viện này để sử dụng hình ảnh cho phần splash loading
 }

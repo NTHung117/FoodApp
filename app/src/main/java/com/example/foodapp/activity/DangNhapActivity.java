@@ -107,6 +107,8 @@ public class DangNhapActivity extends AppCompatActivity {
                                 isLogin = true;
                                 Paper.book().write("islogin", isLogin);
                                 Utils.user_current = userModel.getResult().get(0);//Get 0 là get phần tử đầu tiên của cái list, nếu như có 2 giá trị thì phải get(1) mới lấy được giá trị thứ 2
+                                //Lưu lại thông tin người dùng
+                                Paper.book().write("user", userModel.getResult().get(0));
                                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);//Đăng nhập thành công sẽ chuyển màn hình qua trang Home
                                 startActivity(intent);
                                 finish();

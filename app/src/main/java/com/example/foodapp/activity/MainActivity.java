@@ -30,6 +30,7 @@ import com.example.foodapp.adapter.SanPhamMoiAdapter;
 import com.example.foodapp.model.LoaiSp;
 import com.example.foodapp.model.SanPhamMoi;
 import com.example.foodapp.model.SanPhamMoiModel;
+import com.example.foodapp.model.User;
 import com.example.foodapp.retrofit.ApiBanHang;
 import com.example.foodapp.retrofit.RetrofitClient;
 import com.example.foodapp.utils.Utils;
@@ -39,6 +40,7 @@ import com.nex3z.notificationbadge.NotificationBadge;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.paperdb.Paper;
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
@@ -65,7 +67,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         apiBanHang = RetrofitClient.getInstance(Utils.BASE_URL).create(ApiBanHang.class);
 
-
+        Paper.init(this);//Khởi tạo thư viện paper
+        if (Paper.book().read("user") != null){
+            User user = Paper.book().read("user");
+            Utils.user_current = user;
+        }
         AnhXa();
         ActionBar();
 
@@ -103,6 +109,13 @@ public class MainActivity extends AppCompatActivity {
                         Intent xemdonhang = new Intent(getApplicationContext(), XemDonActivity.class);
                         startActivity(xemdonhang);
                         break;
+                    case 6:
+                        //Xóa case user, để nó không tự động đăng nhập thẳng vào màn hình home
+                        Paper.book().delete("user");
+                        Intent dangxuat = new Intent(getApplicationContext(), DangNhapActivity.class);
+                        startActivity(dangxuat);
+                        finish();
+                        break;
                 }
             }
         });
@@ -134,6 +147,7 @@ public class MainActivity extends AppCompatActivity {
                         loaiSpModel -> {
                             if (loaiSpModel.isSuccess()){
                                 mangloaisp = loaiSpModel.getResult();
+                                mangloaisp.add(new LoaiSp("Đăng xuất", "https://cdn.icon-icons.com/icons2/2518/PNG/512/logout_icon_151219.png"));
                                 //Khoi tao adapter
                                 loaiSpAdapter = new LoaiSpAdapter(getApplicationContext(),mangloaisp);
                                 listViewManHinhChinh.setAdapter(loaiSpAdapter);
