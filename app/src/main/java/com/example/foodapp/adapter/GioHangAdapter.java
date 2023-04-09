@@ -5,6 +5,8 @@ import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -50,6 +52,23 @@ public class GioHangAdapter extends RecyclerView.Adapter<GioHangAdapter.MyViewHo
         holder.item_giohang_giaSp.setText(decimalFormat.format((gioHang.getGiaSp())));
         long gia = gioHang.getSoLuong() * gioHang.getGiaSp();
         holder.item_giohang_tongTien.setText(decimalFormat.format(gia));
+        holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (b){
+                    Utils.mangmuahang.add(gioHang);
+                    EventBus.getDefault().postSticky(new TinhTongEvent()); //Gửi sự kiện qua model TinhTongEvent
+                }else {
+                    for (int i = 0; i < Utils.mangmuahang.size(); i++){//Khi t click bỏ chọn, t phải chui vào mảng mua hàng, t duyệt qua tất cả phẩn tử của mảng mua hàng,
+                         //t tìm xem có id nào chung với id vừa click không để chúng ta bỏ nó đi
+                        if (Utils.mangmuahang.get(i).getIdSp() == gioHang.getIdSp()){
+                            Utils.mangmuahang.remove(i);
+                            EventBus.getDefault().postSticky(new TinhTongEvent()); //Gửi sự kiện qua model TinhTongEvent
+                        }
+                    }
+                }
+            }
+        });
         holder.setListener(new ImageClickListener() {
             @Override
             public void onImageClick(View view, int pos, int giatri) {
@@ -108,6 +127,7 @@ public class GioHangAdapter extends RecyclerView.Adapter<GioHangAdapter.MyViewHo
         ImageView item_giohang_img, img_giohang_cong, img_giohang_tru;
         TextView item_giohang_tenSp, item_giohang_giaSp, item_giohang_soLuong, item_giohang_tongTien;
         ImageClickListener listener;
+        CheckBox checkBox;
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             item_giohang_img = itemView.findViewById(R.id.item_giohang_img);
@@ -117,6 +137,7 @@ public class GioHangAdapter extends RecyclerView.Adapter<GioHangAdapter.MyViewHo
             item_giohang_tongTien = itemView.findViewById(R.id.item_giohang_tongTien);
             img_giohang_cong =  itemView.findViewById(R.id.item_giohang_cong);
             img_giohang_tru =  itemView.findViewById(R.id.item_giohang_tru);
+            checkBox = itemView.findViewById(R.id.item_giohang_checkbox);
 
             //event click
             img_giohang_cong.setOnClickListener(this);

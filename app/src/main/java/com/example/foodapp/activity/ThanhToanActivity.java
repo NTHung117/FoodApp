@@ -46,8 +46,8 @@ public class ThanhToanActivity extends AppCompatActivity {
 
     private void countItem() {
         totalItem = 0;
-        for (int i = 0; i < Utils.manggiohang.size(); i++){
-            totalItem = totalItem + Utils.manggiohang.get(i).getSoLuong();
+        for (int i = 0; i < Utils.mangmuahang.size(); i++){
+            totalItem = totalItem + Utils.mangmuahang.get(i).getSoLuong();
         }
     }
 
@@ -88,13 +88,14 @@ public class ThanhToanActivity extends AppCompatActivity {
                     int id = Utils.user_current.getId();
                     //Post dữ liệu lên sever
                     //Để post toàn bộ giỏ hàng lên database t sẽ chuyển cái giỏ hàng thành một cái chuỗi json và sử dụng thư viện json để chuyển nó
-                    Log.d("test", new Gson().toJson(Utils.manggiohang));
-                    compositeDisposable.add(apiBanHang.createOrder(str_email,str_sdt,String.valueOf(tongTien), id, str_diachi, totalItem,new Gson().toJson(Utils.manggiohang))
+                    Log.d("test", new Gson().toJson(Utils.mangmuahang));
+                    compositeDisposable.add(apiBanHang.createOrder(str_email,str_sdt,String.valueOf(tongTien), id, str_diachi, totalItem,new Gson().toJson(Utils.mangmuahang))
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(
                                     userModel -> {
                                         Toast.makeText(getApplicationContext(), "Thanh toán thành công", Toast.LENGTH_SHORT).show();
+                                        Utils.mangmuahang.clear();
                                         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                                         startActivity(intent);
                                         finish();

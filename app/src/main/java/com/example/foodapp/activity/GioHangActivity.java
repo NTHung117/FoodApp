@@ -37,13 +37,16 @@ public class GioHangActivity extends AppCompatActivity {
         setContentView(R.layout.activity_gio_hang);
         initView();
         initControl();
+        if (Utils.mangmuahang != null){
+            Utils.mangmuahang.clear();
+        }
         tinhHoaDon();
     }
 
     private void tinhHoaDon() {
         tongtienSp = 0 ;
-        for (int i = 0; i < Utils.manggiohang.size(); i++){
-            tongtienSp = tongtienSp + (Utils.manggiohang.get(i).getGiaSp() * Utils.manggiohang.get(i).getSoLuong());
+        for (int i = 0; i < Utils.mangmuahang.size(); i++){//Tính tiền trong mảng mua hàng chứ không tính tiền trong mảng giỏ hàng
+            tongtienSp = tongtienSp + (Utils.mangmuahang.get(i).getGiaSp() * Utils.mangmuahang.get(i).getSoLuong());
 
         }
         DecimalFormat decimalFormat = new DecimalFormat("###,###,###");
@@ -73,6 +76,8 @@ public class GioHangActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), ThanhToanActivity.class);
                 intent.putExtra("tongTien", tongtienSp);
+                //Sau khi mua xong t clear giỏ hàng
+                Utils.manggiohang.clear();
                 startActivity(intent);
             }
         });
