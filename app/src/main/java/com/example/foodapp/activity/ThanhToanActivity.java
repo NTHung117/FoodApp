@@ -15,12 +15,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.foodapp.R;
+import com.example.foodapp.model.NotiSendData;
 import com.example.foodapp.retrofit.ApiBanHang;
+import com.example.foodapp.retrofit.ApiPushNotification;
 import com.example.foodapp.retrofit.RetrofitClient;
+import com.example.foodapp.retrofit.RetrofitClientNoti;
 import com.example.foodapp.utils.Utils;
 import com.google.gson.Gson;
 
 import java.text.DecimalFormat;
+import java.util.HashMap;
+import java.util.Map;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
@@ -94,6 +99,8 @@ public class ThanhToanActivity extends AppCompatActivity {
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(
                                     userModel -> {
+                                        //Khi thanh toán thành công sẽ gửi một thông báo
+                                        pushNotiUser();
                                         Toast.makeText(getApplicationContext(), "Thanh toán thành công", Toast.LENGTH_SHORT).show();
                                         Utils.mangmuahang.clear();
                                         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
@@ -108,6 +115,28 @@ public class ThanhToanActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void pushNotiUser() {
+        //Để gửi đi được cần phải có token của admin
+        String token = "cwOgQXllT6OPVZ-ipUgBkQ:APA91bGDt2DgK9lju4YENlTbIzFGievQ4W56KmgW2ocVZfmSmA0cb4j-Ys4zWqI3kf96TegWcg7tXDbZbNbiDp69x3uJPyEISZ5uA0xUnqM62DItDjh5n7HVub-FsCy5KGOS-RA6xQ3G";
+        //Cần chuẩn bị dữ liệu để gửi đi
+        Map<String, String> data = new HashMap<>();
+        data.put("title", "thông báo");
+        data.put("body","Bạn có đơn hàng mới");
+        NotiSendData notiSendData = new NotiSendData(token, data);
+        ApiPushNotification apiPushNotification = RetrofitClientNoti.getInstance().create(ApiPushNotification.class);
+        compositeDisposable.add(apiPushNotification.sendNotification(notiSendData)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        notiResponse -> {
+
+                        },
+                        throwable -> {
+                            Log.d("log", throwable.getMessage());
+                        }
+                ));
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.example.foodapp.activity;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 
@@ -15,6 +16,11 @@ import com.example.foodapp.R;
 import com.example.foodapp.retrofit.ApiBanHang;
 import com.example.foodapp.retrofit.RetrofitClient;
 import com.example.foodapp.utils.Utils;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import org.greenrobot.eventbus.android.AndroidLogger;
 
@@ -26,6 +32,7 @@ public class DangKyActivity extends AppCompatActivity {
     EditText email, pass, repass, phoneNumber, userName;
     AppCompatButton button;
     ApiBanHang apiBanHang;
+    FirebaseAuth firebaseAuth;
     CompositeDisposable compositeDisposable = new CompositeDisposable();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,30 +69,48 @@ public class DangKyActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "Vui lòng nhập số điện thoại", Toast.LENGTH_LONG).show();
         }else {
             if (str_pass.equals(str_repass)){
-                compositeDisposable.add(apiBanHang.dangKy(str_email,str_pass,str_userName,str_phoneNumber)
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(
-                                userModel -> {
-                                    if (userModel.isSuccess()){
-                                        Utils.user_current.setEmail(str_email);
-                                        Utils.user_current.setPass(str_pass);
-                                        Intent intent = new Intent(getApplicationContext(), DangNhapActivity.class);
-                                        startActivity(intent);
-                                        finish();
-                                    }else {
-                                        Toast.makeText(getApplicationContext(), userModel.getMessage(), Toast.LENGTH_LONG).show();
+                firebaseAuth = FirebaseAuth.getInstance();
+                firebaseAuth.createUserWithEmailAndPassword(str_email,str_pass)
+                        .addOnCompleteListener(DangKyActivity.this, new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                if (task.isSuccessful()){
+                                    FirebaseUser user = firebaseAuth.getCurrentUser();
+                                    if (user != null) {
+                                        postData( str_email,  str_pass,  str_userName,  str_phoneNumber, user.getUid());
                                     }
-                                },
-                                throwable -> {
-                                    Toast.makeText(getApplicationContext(), throwable.getMessage(), Toast.LENGTH_LONG).show();
+                                } else {
+                                    Toast.makeText(getApplicationContext(), "Email đã tồn tại", Toast.LENGTH_LONG).show();
                                 }
-                        ));
+                            }
+                        });
             }else {
                 Toast.makeText(getApplicationContext(), "Vui lòng nhập lại đúng mật khẩu", Toast.LENGTH_LONG).show();
             }
         }
     }
+    private void postData(String str_email, String str_pass, String str_userName, String str_phoneNumber, String uid){
+        compositeDisposable.add(apiBanHang.dangKy(str_email,str_pass,str_userName,str_phoneNumber, uid)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        userModel -> {
+                            if (userModel.isSuccess()){
+                                Utils.user_current.setEmail(str_email);
+                                Utils.user_current.setPass(str_pass);
+                                Intent intent = new Intent(getApplicationContext(), DangNhapActivity.class);
+                                startActivity(intent);
+                                finish();
+                            }else {
+                                Toast.makeText(getApplicationContext(), userModel.getMessage(), Toast.LENGTH_LONG).show();
+                            }
+                        },
+                        throwable -> {
+                            Toast.makeText(getApplicationContext(), throwable.getMessage(), Toast.LENGTH_LONG).show();
+                        }
+                ));
+    }
+
 
     private void initView() {
         apiBanHang = RetrofitClient.getInstance(Utils.BASE_URL).create(ApiBanHang.class);

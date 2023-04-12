@@ -2,6 +2,7 @@ package com.example.foodapp.retrofit;
 
 import com.example.foodapp.model.DonHangModel;
 import com.example.foodapp.model.LoaiSpModel;
+import com.example.foodapp.model.MessageModel;
 import com.example.foodapp.model.SanPhamMoiModel;
 import com.example.foodapp.model.UserModel;
 
@@ -31,13 +32,21 @@ public interface ApiBanHang {
             @Field("email") String email,
             @Field("pass") String pass,
             @Field("username") String username,
-            @Field("phoneNumber") String phoneNumber
-    );
+            @Field("phoneNumber") String phoneNumber,
+            @Field("uid") String uid
+
+            );
     @POST("dangnhap.php")
     @FormUrlEncoded
     Observable<UserModel> dangNhap(
             @Field("email") String email,
             @Field("pass") String pass
+    );
+    @POST("updatetoken.php")
+    @FormUrlEncoded
+    Observable<MessageModel> updateToken(
+            @Field("id") int id,
+            @Field("token") String token
     );
     @POST("donhang.php")
     @FormUrlEncoded
