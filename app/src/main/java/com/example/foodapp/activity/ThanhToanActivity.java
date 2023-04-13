@@ -118,25 +118,41 @@ public class ThanhToanActivity extends AppCompatActivity {
     }
 
     private void pushNotiUser() {
-        //Để gửi đi được cần phải có token của admin
-        String token = "cwOgQXllT6OPVZ-ipUgBkQ:APA91bGDt2DgK9lju4YENlTbIzFGievQ4W56KmgW2ocVZfmSmA0cb4j-Ys4zWqI3kf96TegWcg7tXDbZbNbiDp69x3uJPyEISZ5uA0xUnqM62DItDjh5n7HVub-FsCy5KGOS-RA6xQ3G";
-        //Cần chuẩn bị dữ liệu để gửi đi
-        Map<String, String> data = new HashMap<>();
-        data.put("title", "thông báo");
-        data.put("body","Bạn có đơn hàng mới");
-        NotiSendData notiSendData = new NotiSendData(token, data);
-        ApiPushNotification apiPushNotification = RetrofitClientNoti.getInstance().create(ApiPushNotification.class);
-        compositeDisposable.add(apiPushNotification.sendNotification(notiSendData)
+        //Get token
+        compositeDisposable.add(apiBanHang.gettoken(1)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        notiResponse -> {
+                        userModel -> {
+                            if (userModel.isSuccess()){
+                                //Dùng vòng lặp for để gửi qua từng admin, Giả sử app có 2 or 3 admin thì nó sẽ duyệt từng admin và gửi cho từng admin
+                                for (int i = 0; i <userModel.getResult().size(); i++){
+                                    //Để gửi đi được cần phải có token của admin
+                                    //Cần chuẩn bị dữ liệu để gửi đi
+                                    Map<String, String> data = new HashMap<>();
+                                    data.put("title", "thông báo");
+                                    data.put("body","Bạn có đơn hàng mới");
+                                    NotiSendData notiSendData = new NotiSendData(userModel.getResult().get(i).getToken(), data);
+                                    ApiPushNotification apiPushNotification = RetrofitClientNoti.getInstance().create(ApiPushNotification.class);
+                                    compositeDisposable.add(apiPushNotification.sendNotification(notiSendData)
+                                            .subscribeOn(Schedulers.io())
+                                            .observeOn(AndroidSchedulers.mainThread())
+                                            .subscribe(
+                                                    notiResponse -> {
 
+                                                    },
+                                                    throwable -> {
+                                                        Log.d("log", throwable.getMessage());
+                                                    }
+                                            ));
+                                }
+                            }
                         },
                         throwable -> {
-                            Log.d("log", throwable.getMessage());
+                            Log.d("Log", throwable.getMessage());
                         }
                 ));
+
     }
 
     @Override

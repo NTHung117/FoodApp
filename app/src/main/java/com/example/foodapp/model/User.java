@@ -3,6 +3,15 @@ package com.example.foodapp.model;
 public class User {
     int id;
     String email, pass, user, phoneNumber;
+    String token;
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
 
     public int getId() {
         return id;

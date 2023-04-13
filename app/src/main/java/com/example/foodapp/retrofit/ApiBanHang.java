@@ -69,4 +69,9 @@ public interface ApiBanHang {
     Observable<SanPhamMoiModel> search(
             @Field("search") String search
     );
+    @POST("gettoken.php")
+    @FormUrlEncoded
+    Observable<UserModel> gettoken(
+            @Field("status") int status
+    );
 }
